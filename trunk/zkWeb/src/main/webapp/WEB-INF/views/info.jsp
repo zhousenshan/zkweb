@@ -35,8 +35,9 @@ body {
 		<table>
 			<tr>
 				<td><label >data：</label></td>
-				<td><input id="textbox1" name="data"
-					value="${data}" /></td>
+				<td>
+				<textarea rows="5" cols="40" name="data">${data}
+				</textarea>
 			</tr>
 			<tr>
 				<td><label >czxid：</label></td>
