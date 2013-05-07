@@ -119,6 +119,11 @@ public class ZkManagerImpl implements Watcher,ZkManager {
 		try {
 			Stat s = zk.exists(path, false);
 			if (s != null) {
+				byte b[] = zk.getData(path, false, s);
+				if(null == b){
+					return "";
+				}
+				log.info("data : "+new String(zk.getData(path, false, s)));
 				return new String(zk.getData(path, false, s));
 			}
 		} catch (Exception e) {
