@@ -22,14 +22,14 @@ public class ZkManagerImpl implements Watcher,ZkManager {
 	private ZooKeeper zk;
 	private final String ROOT = "/";
 	private static final Log log = LogFactory.getLog(ZkManagerImpl.class);
-	private static final ZkManagerImpl _instance = new ZkManagerImpl();
-	private ZkManagerImpl(){
+//	private static final ZkManagerImpl _instance = new ZkManagerImpl();
+	public ZkManagerImpl(){
 		
 	}
 	
 	public static ZkManagerImpl createZk(){
 		
-		return _instance;
+		return new ZkManagerImpl();
 	}
 
 //	public boolean connect(Properties p) {
@@ -63,7 +63,7 @@ public class ZkManagerImpl implements Watcher,ZkManager {
 					.valueOf(p.getProperty(P.sessionTimeOut.toString()))));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return _instance;
+			return this;
 		}
 	};
 	
@@ -74,19 +74,19 @@ public class ZkManagerImpl implements Watcher,ZkManager {
 					.valueOf(p.getProperty(P.sessionTimeOut.toString()))));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return _instance;
+			return this;
 		}
 	};
 
 	public ZkManagerImpl connect(String host, int timeout) {
 		try {
-			if (null == zk) {
+//			if (null == zk) {
 				zk = new ZooKeeper(host, timeout, this);
-			}
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return _instance;
+		return this;
 	}
 
 	public boolean disconnect() {
@@ -112,7 +112,7 @@ public class ZkManagerImpl implements Watcher,ZkManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return new ArrayList<String>();
 	}
 
 	public String getData(String path) {
