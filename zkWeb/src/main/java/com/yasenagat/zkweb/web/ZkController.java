@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.yasenagat.zkweb.model.Tree;
 import com.yasenagat.zkweb.model.TreeRoot;
+import com.yasenagat.zkweb.util.ZkCache;
 import com.yasenagat.zkweb.util.ZkManagerImpl;
 
 @Controller
@@ -23,16 +24,21 @@ public class ZkController {
 	private static final Logger log = LoggerFactory.getLogger(ZkController.class);
 	
 	@RequestMapping(value="/queryZnodeInfo",produces="text/html;charset=UTF-8")
-	public String queryzNodeInfo(@RequestParam(required=false) String path,Model model){
+	public String queryzNodeInfo(
+			@RequestParam(required=false) String path,
+			Model model,
+			@RequestParam(required=true) String cacheId
+			){
 		
 		try {
 			path = URLDecoder.decode(path,"utf-8");
 			log.info("queryzNodeInfo : " + path);
 			if(path != null){
-				model.addAttribute("data", ZkManagerImpl.createZk().connect().getData(path));
-				model.mergeAttributes(ZkManagerImpl.createZk().connect().getNodeMeta(path));
-				model.addAttribute("acls", ZkManagerImpl.createZk().connect().getACLs(path));
+				model.addAttribute("data", ZkCache.get(cacheId).getData(path));
+				model.mergeAttributes(ZkCache.get(cacheId).getNodeMeta(path));
+				model.addAttribute("acls", ZkCache.get(cacheId).getACLs(path));
 				model.addAttribute("path",path);
+				model.addAttribute("cacheId", cacheId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -43,10 +49,15 @@ public class ZkController {
 	
 	
 	@RequestMapping(value="/queryZnode")
-	public @ResponseBody List<Tree> query(@RequestParam(required=false) String id,@RequestParam(required=false) String path){
+	public @ResponseBody List<Tree> query(
+			@RequestParam(required=false) String id,
+			@RequestParam(required=false) String path,
+			@RequestParam(required=true) String cacheId
+			){
 		
 		log.info("id : {}",id);
 		log.info("path : {}",path);
+		log.info("cacheId : {}",cacheId);
 		
 		TreeRoot root = new TreeRoot();
 		
@@ -54,7 +65,7 @@ public class ZkController {
 			
 		}else if("/".equals(path)){
 			root.remove(0);
-			List<String> pathList = ZkManagerImpl.createZk().connect().getChildren(null);
+			List<String> pathList = ZkCache.get(cacheId).getChildren(null);
 			log.info("list {}",pathList);
 			for(String p : pathList){
 				Map<String, Object> atr = new HashMap<String, Object>();
@@ -70,7 +81,7 @@ public class ZkController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			List<String> pathList = ZkManagerImpl.createZk().connect().getChildren(path);
+			List<String> pathList = ZkCache.get(cacheId).getChildren(path);
 			for(String p : pathList){
 				Map<String, Object> atr = new HashMap<String, Object>();
 				atr.put("path", path+"/"+p);
@@ -83,11 +94,15 @@ public class ZkController {
 	}
 	
 	@RequestMapping(value="/saveData",produces="text/html;charset=UTF-8")
-	public @ResponseBody String saveData(@RequestParam() String path,@RequestParam() String data){
+	public @ResponseBody String saveData(
+			@RequestParam() String path,
+			@RequestParam() String data,
+			@RequestParam(required=true) String cacheId
+			){
 		
 		try {
 			log.info("data:{}",data);
-			return ZkManagerImpl.createZk().connect().setData(path, data)==true ? "保存成功" : "保存失败";
+			return ZkCache.get(cacheId).setData(path, data)==true ? "保存成功" : "保存失败";
 		} catch (Exception e) {
 			log.info("Error : {}",e.getMessage());
 			e.printStackTrace();
@@ -97,12 +112,16 @@ public class ZkController {
 	}
 	
 	@RequestMapping(value="/createNode",produces="text/html;charset=UTF-8")
-	public @ResponseBody String createNode(@RequestParam() String path,@RequestParam() String nodeName){
+	public @ResponseBody String createNode(
+			@RequestParam() String path,
+			@RequestParam() String nodeName,
+			@RequestParam(required=true) String cacheId
+			){
 		
 		try {
 			log.info("path:{}",path);
 			log.info("nodeName:{}",nodeName);
-			return ZkManagerImpl.createZk().connect().createNode(path, nodeName, "")==true ? "保存成功" : "保存失败";
+			return ZkCache.get(cacheId).createNode(path, nodeName, "")==true ? "保存成功" : "保存失败";
 		} catch (Exception e) {
 			log.info("Error : {}",e.getMessage());
 			e.printStackTrace();
@@ -112,11 +131,14 @@ public class ZkController {
 	}
 	
 	@RequestMapping(value="/deleteNode",produces="text/html;charset=UTF-8")
-	public @ResponseBody String deleteNode(@RequestParam() String path){
+	public @ResponseBody String deleteNode(
+			@RequestParam() String path,
+			@RequestParam(required=true) String cacheId
+			){
 		
 		try {
 			log.info("path:{}",path);
-			return ZkManagerImpl.createZk().connect().deleteNode(path)==true ? "删除成功" : "删除失败";
+			return ZkCache.get(cacheId).deleteNode(path)==true ? "删除成功" : "删除失败";
 		} catch (Exception e) {
 			log.info("Error : {}",e.getMessage());
 			e.printStackTrace();
