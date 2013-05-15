@@ -23,7 +23,8 @@ public class ZkCfgManagerImpl implements ZkCfgManager {
 	private static Logger log = LoggerFactory.getLogger(ZkCfgManagerImpl.class);
 //	jdbc:h2:tcp://localhost/~/test
 //		jdbc:h2:~/zkcfg
-	private JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:tcp://localhost/~/zkcfg","sa","sa"); 
+	private static JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:tcp://localhost/~/zkcfg","sa","sa"); 
+	private static Connection conn = null;
 	static QueryRunner run = new QueryRunner(H2Util.getDataSource());
 	
 	public ZkCfgManagerImpl() {
@@ -31,9 +32,22 @@ public class ZkCfgManagerImpl implements ZkCfgManager {
 		cp.setLoginTimeout(1000 * 50);
 	};
 	private Connection getConnection() throws SQLException{
-		
-		return cp.getConnection();
+		if(null == conn){
+			conn = cp.getConnection();
+		}
+		return conn;
 	}
+	
+	private void closeConn(){
+		if(null != conn){
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public boolean init() {
 		PreparedStatement ps = null;
 		try {
@@ -120,6 +134,7 @@ public class ZkCfgManagerImpl implements ZkCfgManager {
 					e.printStackTrace();
 				}
 			}
+			
 		}
 		return new ArrayList<Map<String,Object>>();
 	}
@@ -214,7 +229,7 @@ public class ZkCfgManagerImpl implements ZkCfgManager {
 		return null;
 	}
 
-	public synchronized List<Map<String, Object>> query(int page, int rows) {
+	public List<Map<String, Object>> query(int page, int rows) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {

@@ -31,6 +31,7 @@ body {
 <body>
     <form id="ff" action="zk/saveData" method="post">
     <input type="hidden" value="${path}" name="path" />
+    <input type="hidden" value="${cacheId}" name="cacheId" />
 	<div>
 		<table>
 			<tr>
