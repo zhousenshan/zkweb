@@ -22,8 +22,9 @@ public class ZkCfgManagerImpl implements ZkCfgManager {
 
 	private static Logger log = LoggerFactory.getLogger(ZkCfgManagerImpl.class);
 //	jdbc:h2:tcp://localhost/~/test
-//		jdbc:h2:~/zkcfg
-	private static JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:tcp://localhost/~/zkcfg","sa","sa"); 
+		
+	private static JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:~/zkcfg","sa","sa");
+//	private static JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:tcp://127.0.0.1/~/zkcfg","sa","sa"); 
 	private static Connection conn = null;
 	static QueryRunner run = new QueryRunner(H2Util.getDataSource());
 	
