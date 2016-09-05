@@ -102,7 +102,7 @@ public class ZkController {
 		
 		try {
 			log.info("data:{}",data);
-			return ZkCache.get(cacheId).setData(path, data)==true ? "保存成功" : "保存失败";
+			return ZkCache.get(cacheId).setData(path, URLDecoder.decode(data,"utf-8"))==true ? "保存成功" : "保存失败";
 		} catch (Exception e) {
 			log.info("Error : {}",e.getMessage());
 			e.printStackTrace();
