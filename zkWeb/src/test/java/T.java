@@ -17,13 +17,49 @@ import com.yasenagat.zkweb.util.ZkCfgManager;
 import com.yasenagat.zkweb.util.ZkManagerImpl;
 
 public class T {
+	@org.testng.annotations.Test
+	public void testH2Date() {
+		ZkCfgManager zkCfgManager = ZkCfgFactory.createZkCfgManager();
+		zkCfgManager.init();
+		zkCfgManager.query();
+		System.out.println(zkCfgManager.query());
+		System.out.println(zkCfgManager.query(2, 4));
+		System.out.println(zkCfgManager.count());
 
-	@Test
-	public void t() {
+	}
+	@org.testng.annotations.Test
+	public void testZkCfg(){
+		
+		ZkCfgManager zkCfgManager = ZkCfgFactory.createZkCfgManager();
+		
+		try {
+			zkCfgManager.init();
+			
+			for(int i = 0 ; i < 9 ; i ++){
+			
+			zkCfgManager.add("test_" +i, "localhost:2181", "50000"+i);
+			}
+			
+			boolean b = zkCfgManager.add("test", "localhost:2181", "50000");
+			System.out.println(b);
+			System.out.println(zkCfgManager.query());;
+			System.out.println(zkCfgManager.query(2, 4));
+		System.out.println(zkCfgManager.update("20cfbbe0eb4045afaecd9bf8dce58a44", "haha", "str", "123"));
+			System.out.println(zkCfgManager.findById("20cfbbe0eb4045afaecd9bf8dce58a44"));
+			System.out.println(zkCfgManager.delete("337cdbc2fbbf4890bb3184e6b618a589"));
+			System.out.println(zkCfgManager.count());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@org.testng.annotations.Test
+	public void zooKeeper() {
 
 		try {
 			Properties p = new Properties();
-			p.setProperty("host", "192.168.20.111:2181");
+			p.setProperty("host", "192.168.1.104:2181");
 			p.setProperty("sessionTimeOut", "3000");
 			ZkManagerImpl zk = ZkManagerImpl.createZk();
 			zk.connect(p);
@@ -67,7 +103,8 @@ public class T {
 		}
 	}
 
-	@Test
+	
+	
 	public void testH2() {
 
 		try {
@@ -153,41 +190,5 @@ public class T {
 
 	}
 
-	@Test
-	public void testZkCfg(){
-		
-		ZkCfgManager zkCfgManager = ZkCfgFactory.createZkCfgManager();
-		
-		try {
-			zkCfgManager.init();
-			
-//			for(int i = 0 ; i < 9 ; i ++){
-//				
-//				zkCfgManager.add("test_" +i, "localhost:2181", "50000"+i);
-//			}
-			
-//			boolean b = zkCfgManager.add("test", "localhost:2181", "50000");
-//			System.out.println(b);
-			System.out.println(zkCfgManager.query());;
-			System.out.println(zkCfgManager.query(2, 4));
-//			System.out.println(zkCfgManager.update("20cfbbe0eb4045afaecd9bf8dce58a44", "haha", "str", "123"));
-//			System.out.println(zkCfgManager.findById("20cfbbe0eb4045afaecd9bf8dce58a44"));
-//			System.out.println(zkCfgManager.delete("337cdbc2fbbf4890bb3184e6b618a589"));
-			System.out.println(zkCfgManager.count());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
-	@Test
-	public void testOther(){
-		
-		Map<String, String> map = new HashMap<String, String>();
-		
-		map.put("1", "2");
-		map.put("1", "3");
-		
-		System.out.println(map);
-	}
 }

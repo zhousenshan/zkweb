@@ -40,8 +40,8 @@ body {
 				<textarea rows="5" cols="40" name="data">${data}
 				</textarea>
 			</tr>
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="javascript:$('#ff').submit();">保存</a>
-
+			<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="javascript:$('#ff').submit();">保存</a>
+			
 			<tr>
 				<td><label >czxid：</label></td>
 				<td>${czxid }</td>
@@ -105,7 +105,7 @@ body {
 		</table>
 	</div>
 	<br/>
-	</form>
+		</form>
 	<%-- 	${data } ${czxid } ${mzxid } ${ctime } ${mtime } ${version } ${cversion
 	} ${aversion } ${ephemeralOwner } ${dataLength } ${numChildren }
 	${pzxid } --%>

@@ -14,6 +14,8 @@ public interface ZkCfgManager {
 	public boolean delete(String id);
 	public Map<String, Object> findById(String id);
 	public int count();
+	
+	// 建表SQL
 	static String initSql = "CREATE TABLE IF NOT EXISTS ZK(ID VARCHAR PRIMARY KEY, DES VARCHAR, CONNECTSTR VARCHAR, SESSIONTIMEOUT VARCHAR)";
 	
 }

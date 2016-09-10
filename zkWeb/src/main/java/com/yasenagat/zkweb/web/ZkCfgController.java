@@ -31,7 +31,8 @@ public class ZkCfgController {
 	public @ResponseBody Map<String, Object> queryZkCfg(@RequestParam(required=false) int page,@RequestParam(required=false) int rows){
 		
 		try {
-			log.info(new Date()+"");
+			log.debug("开始查询先初始化数据库:"+new Date()+"");
+			zkCfgManager.init();
 			Map<String, Object> _map = new HashMap<String, Object>();
 			_map.put("rows", zkCfgManager.query(page,rows));
 			_map.put("total", zkCfgManager.count());

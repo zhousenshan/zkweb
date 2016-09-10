@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +17,13 @@ import org.h2.jdbcx.JdbcConnectionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yasenagat.zkweb.web.ZkController;
-
 public class ZkCfgManagerImpl implements ZkCfgManager {
 
 	private static Logger log = LoggerFactory.getLogger(ZkCfgManagerImpl.class);
 //	jdbc:h2:tcp://localhost/~/test
 		
-	private static JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:~/zkcfg","sa","sa");
+	// 指定JDBC串
+	private static JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:~/xcc","sa","sa");
 //	private static JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:tcp://127.0.0.1/~/zkcfg","sa","sa"); 
 	private static Connection conn = null;
 	static QueryRunner run = new QueryRunner(H2Util.getDataSource());
@@ -48,7 +48,6 @@ public class ZkCfgManagerImpl implements ZkCfgManager {
 			}
 		}
 	}
-	
 	public boolean init() {
 		PreparedStatement ps = null;
 		try {
@@ -74,7 +73,8 @@ public class ZkCfgManagerImpl implements ZkCfgManager {
 		PreparedStatement ps = null;
 		try {
 			ps = getConnection().prepareStatement("INSERT INTO ZK VALUES(?,?,?,?)");
-			ps.setString(1, UUID.randomUUID().toString().replaceAll("-", ""));
+			//ps.setString(1, UUID.randomUUID().toString().replaceAll("-", ""));
+			ps.setString(1,CodeUtil.create15());
 			ps.setString(2, des);
 			ps.setString(3, connectStr);
 			ps.setString(4, sessionTimeOut);
@@ -112,7 +112,7 @@ public class ZkCfgManagerImpl implements ZkCfgManager {
 				for(int i = 0 ; i < cols ;i++){
 					map.put(meta.getColumnName(i+1), rs.getObject(i+1));
 				}
-				list.add(map);
+				list.add(map);// TODO Auto-generated constructor stub
 			}
 			
 			return list;
